@@ -1,0 +1,22 @@
+name: Research idea / experiment
+description: Propose or report an experiment (compression, sync schedule, fault tolerance, ...)
+labels: [research]
+body:
+  - type: textarea
+    id: hypothesis
+    attributes:
+      label: Hypothesis
+      description: What do you expect, and why? Link papers if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: setup
+    attributes:
+      label: Setup
+      description: Simulator flags or training config to test it.
+      render: shell
+  - type: textarea
+    id: results
+    attributes:
+      label: Results (if you already ran it)
+      description: Loss, bytes communicated, wall-clock — and the baseline you compared against.
