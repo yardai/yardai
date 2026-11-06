@@ -30,7 +30,8 @@
 
 ## Project / org
 
-- [ ] Push repo to `github.com/yardai/yardai`; enable private vulnerability reporting, branch protection, DCO check
+- [x] Push repo to `github.com/yardai/yardai`
+- [ ] Enable private vulnerability reporting, branch protection, DCO check
 - [ ] Set a contact email for Code of Conduct and security reports
 - [ ] Add `CODEOWNERS` once maintainer GitHub handles are set
 - [ ] Contribution ledger + scoring RFC (for the ownership program)

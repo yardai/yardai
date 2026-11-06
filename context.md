@@ -5,7 +5,7 @@
 YardAI is a fully open-source LLM project whose USP is **training across a large, global, unreliable swarm of volunteer devices** with as little communication ("chattiness") as possible. Devices come online and go offline at any time.
 
 - **Founder:** Rahul Garg. Initial personal focus: learning LLMs deeply and optimising them for distributed training.
-- **GitHub org:** `yardai` → repo `github.com/yardai/yardai` (local repo not yet pushed).
+- **GitHub:** `github.com/yardai/yardai` (remote `git@github.com:yardai/yardai.git`).
 - **License:** Apache-2.0. Contributions under DCO sign-off.
 - **Ownership intent:** top 5 contributors each own 10% of the company. Statement of intent only — legal terms (entity, measurement, vesting, eligibility) not yet defined. See GOVERNANCE.md.
 - **Serving/inference:** undecided — dedicated cloud or distributed like training.
@@ -76,3 +76,4 @@ docs/              architecture.md, learning-path.md, rfcs/0000-template.md
 ## Changelog
 
 - **2026-11-06** — Project bootstrapped: OSS scaffolding (Apache-2.0, CONTRIBUTING, CoC, SECURITY, GOVERNANCE with ownership intent, CI, templates), reference DiLoCo worker/coordinator, int8/top-k compression with error feedback, in-process swarm simulator (`yardai-sim`), tests, README, architecture doc, learning path, roadmap. Sample run: 8 workers, 15 rounds, H=50, 20% dropout, int8 → eval loss 2.67 → 1.46 with 200× less upload than data-parallel.
+- **2026-11-06** — Pushed to `github.com/yardai/yardai` (`main`).
