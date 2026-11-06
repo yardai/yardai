@@ -58,6 +58,9 @@ class Worker:
         )
         self._residuals: list[torch.Tensor] | None = None
         self.bytes_sent = 0
+        self.tokens_trained = 0
+        """Total training tokens processed, accepted or not (input to compute credits)."""
+        self.last_round_tokens = 0
 
     @torch.no_grad()
     def pull(self, global_params: Sequence[torch.Tensor]) -> None:
@@ -69,8 +72,10 @@ class Worker:
         steps = steps or self.cfg.inner_steps
         self.model.train()
         total = 0.0
+        self.last_round_tokens = 0
         for _ in range(steps):
             batch = next(self.data)
+            self.last_round_tokens += batch[0].numel()
             loss = self.loss_fn(self.model, batch)
             self.inner_opt.zero_grad(set_to_none=True)
             loss.backward()
@@ -78,6 +83,7 @@ class Worker:
                 nn.utils.clip_grad_norm_(_params(self.model), self.cfg.grad_clip)
             self.inner_opt.step()
             total += loss.item()
+        self.tokens_trained += self.last_round_tokens
         return total / steps
 
     @torch.no_grad()

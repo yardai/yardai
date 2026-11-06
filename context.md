@@ -9,6 +9,9 @@ YardAI is a fully open-source LLM project whose USP is **training across a large
 - **License:** Apache-2.0. Contributions under DCO sign-off.
 - **Ownership intent:** top 5 contributors each own 10% of the company. Statement of intent only — legal terms (entity, measurement, vesting, eligibility) not yet defined. See GOVERNANCE.md.
 - **Serving/inference:** undecided — dedicated cloud or distributed like training.
+- **Research focus (differentiators):** (1) truly consumer devices — Macs/laptops/gaming PCs, 8–16 GB memory, Apple Silicon (MPS/MLX), thermal/power-aware; (2) extreme churn — join/leave anytime incl. mid-round, no single point of failure. Low communication alone is not a differentiator: Prime Intellect, Templar (Bittensor) and Nous (Psyche) already ship DiLoCo-style training.
+- **Device donor rewards:** compute credits redeemable for YardAI inference tokens — non-transferable, no cash value, not crypto, separate from equity. Draft design: `docs/rfcs/0001-compute-credits.md`.
+- **Founder's learning plan:** `docs/learning-path.md` (Phase 0 basics → LLMs → memory → datacenter distributed → DiLoCo/compression → consumer devices → churn → real swarm).
 
 ## Strategy
 
@@ -42,8 +45,9 @@ docs/              architecture.md, learning-path.md, rfcs/0000-template.md
 - `Worker.pull(global_params)` → copy global weights in.
 - `Worker.train_round(steps=None)` → H local steps; returns mean loss. Inner optimizer state persists across rounds.
 - `Worker.pseudo_gradient(global_params)` → list of `Packet` (Δ = global − local, + residual, compressed). Tracks `bytes_sent`.
+- `Worker.tokens_trained` / `Worker.last_round_tokens` → training tokens processed (credit accounting input).
 - `Coordinator.apply(reports)` → averages decompressed Δ over reporting workers, outer SGD step; returns False if below `min_quorum`.
-- `simulate.run(cfg, n_workers, rounds, dropout, ...)` → `SimResult(eval_loss, participants, bytes_uploaded, ddp_bytes_equivalent, skipped_rounds, reduction)`.
+- `simulate.run(cfg, n_workers, rounds, dropout, ...)` → `SimResult(eval_loss, participants, bytes_uploaded, ddp_bytes_equivalent, skipped_rounds, credited_tokens, reduction)`. `credited_tokens[worker_id]` counts only tokens from updates used in an outer step.
 - DDP baseline accounting: `inner_steps × fp32 param bytes` per reporting worker per round (upload only).
 
 ## Feature status
@@ -57,6 +61,8 @@ docs/              architecture.md, learning-path.md, rfcs/0000-template.md
 | Robust aggregation / verification | ⏳ not started |
 | Real base-model training (SmolLM2-135M) | ⏳ not started |
 | Serving | ❓ undecided |
+| Compute-credit accounting (simulator only) | ✅ |
+| Compute credits ledger / redemption | 📝 RFC 0001 draft |
 
 ## Decisions
 
@@ -64,6 +70,7 @@ docs/              architecture.md, learning-path.md, rfcs/0000-template.md
 - Contributor Covenant 2.1 adopted by reference.
 - Big changes via RFCs in `docs/rfcs/`.
 - Synthetic arithmetic corpus for simulator (no dataset licensing issues).
+- Device donors are rewarded with inference-token credits for accepted, verified work — not a crypto token, not cash, not equity (RFC 0001, draft).
 
 ## Known issues
 
@@ -77,3 +84,4 @@ docs/              architecture.md, learning-path.md, rfcs/0000-template.md
 
 - **2026-11-06** — Project bootstrapped: OSS scaffolding (Apache-2.0, CONTRIBUTING, CoC, SECURITY, GOVERNANCE with ownership intent, CI, templates), reference DiLoCo worker/coordinator, int8/top-k compression with error feedback, in-process swarm simulator (`yardai-sim`), tests, README, architecture doc, learning path, roadmap. Sample run: 8 workers, 15 rounds, H=50, 20% dropout, int8 → eval loss 2.67 → 1.46 with 200× less upload than data-parallel.
 - **2026-11-06** — Pushed to `github.com/yardai/yardai` (`main`).
+- **2026-11-06** — Research focus set to consumer devices + extreme churn; learning path rewritten from basics around those two frontiers. Draft RFC 0001 (compute credits → YardAI inference tokens for device donors). Simulator now tracks `tokens_trained` per worker and `SimResult.credited_tokens` for accepted updates; README updated.

@@ -35,7 +35,10 @@ YardAI's focus is to push that further:
 | Node failure | stalls the job | expected; the swarm carries on |
 | Who can join | the company | anyone |
 
-**Less chatter is the whole game.** That's the problem we're optimising for.
+**Less chatter is the whole game.** On top of that, YardAI's research goes where other decentralized-training projects mostly don't:
+
+- **Truly consumer hardware.** MacBooks, laptops and gaming PCs, not rented H100s. That means training within 8–16 GB of memory, on Apple Silicon, without making anyone's machine unusable.
+- **Extreme churn.** Devices that sleep, close their lid, lose Wi-Fi or vanish mid-round. Joining and leaving should be completely normal, not a failure case.
 
 ## How it works
 
@@ -112,6 +115,10 @@ The full roadmap is in [todo.md](todo.md).
 - **Process:** decisions go through public [RFCs](docs/rfcs/); experiments are reproducible from a command line.
 - **Training runs:** data sources, configs, logs and checkpoints will be published.
 
+## Lend your device, use the model
+
+People who lend their devices for training will earn **compute credits** that can be spent as **inference tokens on YardAI models**: you help train it, so you get to use it. Credits come only from verified, accepted work, are recorded on a public ledger, and aren't a crypto token. The design is a draft: [RFC 0001](docs/rfcs/0001-compute-credits.md). Push back on it.
+
 ## Build it with us — and own part of it
 
 YardAI is meant to belong to the people who build it. **The top 5 contributors will each own 10% of the company.** Contributions are tracked publicly and measured by impact, not commit count. The terms are still being formalised — read [GOVERNANCE.md](GOVERNANCE.md) for exactly what's decided and what isn't.
@@ -120,13 +127,14 @@ Good places to start:
 
 - 🧪 **Research** — compression, sync schedules, async outer steps, robustness. Open a [research issue](https://github.com/yardai/yardai/issues/new?template=research.yml).
 - 🛠 **Systems** — networking, NAT traversal, checkpointing, the worker client.
-- 📚 **Learning in public** — we're writing a [learning path](docs/learning-path.md) for distributed LLM training. Improve it.
+- 💻 **Consumer devices** — benchmark training on your Mac or laptop, try MLX vs PyTorch MPS, squeeze bigger models into less memory.
+- 📚 **Learning in public** — a [learning path](docs/learning-path.md) that goes from zero to distributed LLM training on consumer devices. Improve it.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) to get set up.
 
 ## Standing on shoulders
 
-YardAI builds on ideas from DiLoCo and Streaming DiLoCo (Google DeepMind), OpenDiLoCo and INTELLECT-1 (Prime Intellect), DeMo / DisTrO (Nous Research), Hivemind, Petals and SWARM parallelism, and decades of federated and local-SGD research. Thank you to everyone who published their work openly.
+YardAI builds on ideas from DiLoCo and Streaming DiLoCo (Google DeepMind), OpenDiLoCo and INTELLECT-1 (Prime Intellect), DeMo / DisTrO and Psyche (Nous Research), Templar, Pluralis, Hivemind, Petals, Moshpit SGD and SWARM parallelism, BOINC and Folding@home, and decades of federated and local-SGD research. Thank you to everyone who published their work openly.
 
 ## License
 

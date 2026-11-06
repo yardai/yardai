@@ -29,6 +29,8 @@ class SimResult:
     bytes_uploaded: int = 0
     ddp_bytes_equivalent: int = 0
     skipped_rounds: int = 0
+    credited_tokens: dict[int, int] = field(default_factory=dict)
+    """Per-worker training tokens from updates that were used in an outer step (RFC 0001)."""
 
     @property
     def reduction(self) -> float:
@@ -70,6 +72,7 @@ def run(
         online = [w for w in workers if rng.random() >= dropout]
         g = coord.global_params()
         reports = []
+        reporters = []
         for w in online:
             w.pull(g)
             w.train_round()
@@ -77,8 +80,14 @@ def run(
             if rng.random() < dropout / 2:
                 continue
             reports.append(w.pseudo_gradient(g))
+            reporters.append(w)
             res.ddp_bytes_equivalent += cfg.inner_steps * coord.param_bytes()
-        if not coord.apply(reports):
+        if coord.apply(reports):
+            for w in reporters:
+                res.credited_tokens[w.worker_id] = (
+                    res.credited_tokens.get(w.worker_id, 0) + w.last_round_tokens
+                )
+        else:
             res.skipped_rounds += 1
         res.participants.append(len(reports))
         res.eval_loss.append(evaluate(global_model, eval_data, seq_len))

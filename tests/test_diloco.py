@@ -42,3 +42,14 @@ def test_topk_with_error_feedback_still_learns():
     cfg = DiLoCoConfig(inner_steps=20, compression="topk", topk_ratio=0.05)
     res = run(cfg, n_workers=3, rounds=6, seed=2)
     assert res.eval_loss[-1] < res.eval_loss[0]
+
+
+def test_credits_only_for_accepted_work():
+    cfg = DiLoCoConfig(inner_steps=5, min_quorum=1)
+    res = run(cfg, n_workers=4, rounds=4, dropout=0.4, batch_size=8, seq_len=16, seed=3)
+    tokens_per_round = 5 * 8 * 16
+    assert res.credited_tokens, "someone should have been credited"
+    for credited in res.credited_tokens.values():
+        assert credited % tokens_per_round == 0
+    # Credited rounds never exceed rounds where a worker actually reported.
+    assert sum(res.credited_tokens.values()) == sum(res.participants) * tokens_per_round
