@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "yardai"
+version = "0.0.1"
+description = "An open-source LLM trained across a global swarm of volunteer devices, with low-communication distributed training."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [{ name = "The YardAI contributors" }]
+keywords = ["llm", "distributed-training", "diloco", "decentralized", "open-source"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = ["torch>=2.2"]
+
+[project.optional-dependencies]
+# Loading real open-weight base models (SmolLM2, Qwen2.5, ...).
+hf = ["transformers>=4.44", "datasets>=2.20"]
+dev = ["pytest>=8", "ruff>=0.6", "pre-commit>=3.7"]
+
+[project.scripts]
+yardai-sim = "yardai.simulate:main"
+
+[project.urls]
+Homepage = "https://github.com/yardai/yardai"
+Issues = "https://github.com/yardai/yardai/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/yardai"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["B905"]  # zip(strict=) — parameter lists are built from the same model
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
